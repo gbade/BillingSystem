@@ -5,6 +5,9 @@ from flask_migrate import Migrate, MigrateCommand
 from flask_script import Manager
 
 from app.main import create_app, db
+from app.main.models import user
+from app.main.models import subscriptions
+from app.main.models import software_plans
 
 app = create_app(os.getenv('BOILERPLATE_ENV') or 'dev')
 
