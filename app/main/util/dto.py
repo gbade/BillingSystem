@@ -10,6 +10,7 @@ class UserDto:
         'email': fields.String(required=True, description='user email address'),
         'password': fields.String(required=True, description='user password'),
         'confirmation_code': fields.String(description='user confirmation code'),
+        'confirmation_time': fields.DateTime(description='')
     })
 
 class InGroupDto:

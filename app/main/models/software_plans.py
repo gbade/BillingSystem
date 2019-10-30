@@ -54,3 +54,17 @@ class Prerequisite(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     offer_id = db.Column(db.Integer, db.ForeignKey('offer.id'), nullable=False)
     plan_id = db.Column(db.Integer, db.ForeignKey('plan.id'), nullable=False)
+
+class Offer(db.Model):
+    """ Subscription Model for storing invoice of payments """
+    __tablename__ = "offer"
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    offer_name = db.Column(db.String(255), nullable=False)
+    offer_start_date = db.Column(db.DateTime, nullable=False)
+    offer_end_date = db.Column(db.DateTime, nullable=True)
+    description = db.Column(db.Text, nullable=False)
+    discount_amount = db.Column(db.Numeric(8,2), nullable=True)
+    discount_percentage = db.Column(db.Numeric(5,2), nullable=True)
+    duration_months = db.Column(db.Integer, nullable=True)
+    duration_end_date = db.Column(db.DateTime, nullable=True)

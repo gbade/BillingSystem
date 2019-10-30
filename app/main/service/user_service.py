@@ -54,6 +54,20 @@ def generate_token(user):
         }
         return response_object, 401
 
+def get_user_group(data):
+    user = get_a_user(id)
+
+    if not user:
+        response_object = {
+           'status': 'fail',
+           'message':'The user does not exist.' 
+        }
+        return response_object, 400
+    else:
+        
+
+    user_group = 
+
 
 def save_changes(data):
     db.session.add(data)
