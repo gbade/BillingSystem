@@ -3,7 +3,10 @@
     "",
     "\\app",
     "\\app\\main",
-    "\\app\\main\\models"
+    "\\app\\main\\controller",
+    "\\app\\main\\models",
+    "\\app\\main\\service"
   ],
+  "SelectedNode": "\\app\\main\\models\\software_plans.py",
   "PreviewInSolutionExplorer": false
 }

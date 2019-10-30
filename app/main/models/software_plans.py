@@ -25,7 +25,7 @@ class OptionIncluded(db.Model):
     plan_id = db.Column(db.Integer, db.ForeignKey('plan.id'), nullable=False)
     option_id = db.Column(db.Integer, db.ForeignKey('option.id'), nullable=False)
     date_added = db.Column(db.DateTime, nullable=False)
-    date_removed = = db.Column(db.DateTime, nullable=True)
+    date_removed = db.Column(db.DateTime, nullable=True)
 
 class Plan(db.Model):
     """ Subscription Model for storing invoice of payments """
