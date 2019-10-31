@@ -1,7 +1,7 @@
 import datetime
 
 from app.main import db
-from app.main.models.user import User, UserGroup, UserGroupType
+from app.main.models.user import User, UserGroup, InGroup
 
 def save_new_user(data):
     user = User.query.filter_by(email=data['email']).first()
@@ -24,7 +24,21 @@ def save_new_user(data):
         )
 
         save_changes(new_user)
-        save_changes(user_group_type)
+        save_changes(user_group)
+
+        user_id = User.query.filter_by(id = new_user.id).first()
+        usergroup = UserGroup.query.filter_by(id = user_group.id).first()
+
+        in_group = InGroup(
+            user_group_id = usergroup.id,
+            user_account_id = user_id.id,
+            time_added = usergroup.insert_ts,
+            time_removed = None,
+            group_admin = data['group_admin']
+        )
+
+        save_changes(in_group)
+
         response_object = {
             'status': 'success',
             'message': 'Successfully registered.'
