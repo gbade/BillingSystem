@@ -53,7 +53,8 @@ def generate_token(user):
             'message': 'Some error occurred. Please try again.'
         }
         return response_object, 401
-
+        
+""" retreive user group data """
 def get_user_group(data):
     user = get_a_user(id)
 
@@ -64,7 +65,7 @@ def get_user_group(data):
         }
         return response_object, 400
     else:
-        
+
 
     user_group = 
 
