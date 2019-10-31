@@ -1,7 +1,7 @@
 import datetime
 
 from app.main import db
-from app.main.models.user import User, UserGroup
+from app.main.models.user import User, UserGroup, UserGroupType
 
 def save_new_user(data):
     user = User.query.filter_by(email=data['email']).first()
@@ -16,7 +16,15 @@ def save_new_user(data):
             confirmation_time= data['confirmation_time'],
             insert_ts = datetime.datetime.utcnow()
         )
+
+        user_group = UserGroup(
+            user_group_type_id = data['user_group_type_id'],
+            customer_invoice_dat = data['customer_invoice_dat'],
+            insert_ts = datetime.datetime.utcnow()
+        )
+
         save_changes(new_user)
+        save_changes(user_group_type)
         response_object = {
             'status': 'success',
             'message': 'Successfully registered.'
@@ -53,7 +61,8 @@ def generate_token(user):
             'message': 'Some error occurred. Please try again.'
         }
         return response_object, 401
-
+        
+""" retreive user group data """
 def get_user_group(data):
     user = get_a_user(id)
 
@@ -62,6 +71,7 @@ def get_user_group(data):
            'status': 'fail',
            'message':'The user does not exist.' 
         }
+
         return response_object, 400
     else:
         user_group = UserGroup.query.filter_by(id = user.user_group_id).first() 
