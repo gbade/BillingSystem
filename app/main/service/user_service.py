@@ -1,7 +1,7 @@
 import datetime
 
 from app.main import db
-from app.main.models.user import User
+from app.main.models.user import User, UserGroup
 
 def save_new_user(data):
     user = User.query.filter_by(email=data['email']).first()
@@ -64,10 +64,10 @@ def get_user_group(data):
         }
         return response_object, 400
     else:
+        user_group = UserGroup.query.filter_by(id = user.user_group_id).first() 
         
-
-    user_group = 
-
+        return user_group, 200
+    
 
 def save_changes(data):
     db.session.add(data)
