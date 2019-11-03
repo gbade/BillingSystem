@@ -1,7 +1,7 @@
 import datetime
 
 from app.main import db
-from app.main.models.user import User, UserGroup, InGroup
+from app.main.models.user import User, UserGroup, InGroup, DeleteUser
 
 def save_new_user(data):
     user = User.query.filter_by(email=data['email']).first()
@@ -19,15 +19,15 @@ def save_new_user(data):
 
         user_group = UserGroup(
             user_group_type_id = data['user_group_type_id'],
-            customer_invoice_dat = data['customer_invoice_dat'],
+            customer_invoice_data = data['customer_invoice_data'],
             insert_ts = datetime.datetime.utcnow()
         )
 
         save_changes(new_user)
         save_changes(user_group)
 
-        user_id = User.query.filter_by(id = new_user.id).first()
-        usergroup = UserGroup.query.filter_by(id = user_group.id).first()
+        user_id = get_a_user(new_user.id)
+        usergroup = get_user_group(user_group.id)
 
         in_group = InGroup(
             user_group_id = usergroup.id,
@@ -47,10 +47,45 @@ def save_new_user(data):
     else:
         response_object = {
             'status': 'fail',
-            'message': 'User already exists. Please Log in.',
+            'message': 'User already exists. Please Log in.'
         }
         return response_object, 409
 
+
+def deactivate_user_account(data):
+    user = get_a_user(data['id'])
+
+    if not user:
+        response_object = {
+            'status': 'fail',
+            'message': 'User does not exist.'
+        }
+        return response_object, 404
+    else:
+        in_group_data = InGroup.query.filter_by(user_account_id = user.id).first()
+
+        deactivated_user = DeleteUser(
+            in_group_id = in_group_data.id,
+            user_account_id = user.id,
+            first_name = user.first_name,
+            last_name = user.last_name,
+            user_name = user.user_name,
+            password = user.password,
+            email = user.email,
+            deleted_at = datetime.datetime.utcnow()
+        )
+        
+        save_changes(deactivated_user)
+
+        delete_user(user)
+
+        response_object = {
+            'status': 'success',
+            'status_code': 00,
+            'message': 'User successfully deactivated.'
+        }
+
+        return response_object, 201
 
 def get_all_users():
     return User.query.all()
@@ -77,22 +112,14 @@ def generate_token(user):
         return response_object, 401
         
 """ retreive user group data """
-def get_user_group(data):
-    user = get_a_user(id)
-
-    if not user:
-        response_object = {
-           'status': 'fail',
-           'message':'The user does not exist.' 
-        }
-
-        return response_object, 400
-    else:
-        user_group = UserGroup.query.filter_by(id = user.user_group_id).first() 
-        
-        return user_group, 200
+def get_user_group(user_group_id):
+    return UserGroup.query.filter_by(id = user_group_id).first() 
     
 
 def save_changes(data):
     db.session.add(data)
+    db.session.commit()
+
+def delete_user(data):
+    db.session.delete(data)
     db.session.commit()

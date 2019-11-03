@@ -2,7 +2,7 @@ from flask import request
 from flask_restplus import Resource
 
 from ..util.dto import UserDto
-from ..service.user_service import save_new_user, get_all_users, get_a_user
+from ..service.user_service import save_new_user, get_all_users, get_a_user, deactivate_user_account
 
 api = UserDto.api
 _user = UserDto.user
@@ -23,6 +23,14 @@ class UserList(Resource):
         """Creates a new User """
         data = request.json
         return save_new_user(data=data)
+    
+    @api.response(201, 'User successfully deactivated.')
+    @api.doc('deactivate a user')
+    @api.marshal_with(_user)
+    def delete(self, validate=True):
+        """deactivate a user account given its identifier"""
+        data = request.json
+        return deactivate_user_account(data=data)
 
 
 @api.route('/<public_id>')
@@ -38,3 +46,5 @@ class User(Resource):
             api.abort(404)
         else:
             return user
+
+    

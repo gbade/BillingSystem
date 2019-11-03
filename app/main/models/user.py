@@ -35,6 +35,7 @@ class DeleteUser(db.Model):
     __tablename__ = "deactivated_users"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    user_account_id = db.Column(db.Integer, nullable=False)
     in_group_id = db.Column(db.Integer, db.ForeignKey('in_group.id'), nullable=False)
     first_name = db.Column(db.String(64), nullable=False)
     last_name = db.Column(db.String(64), nullable=False)
