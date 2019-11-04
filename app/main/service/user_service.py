@@ -26,8 +26,8 @@ def save_new_user(data):
         save_changes(new_user)
         save_changes(user_group)
 
-        user_id = User.query.filter_by(id = new_user.id).first()
-        usergroup = UserGroup.query.filter_by(id = user_group.id).first()
+        user_id = get_a_user(new_user.id)
+        usergroup = get_user_group(user_group.id)
 
         in_group = InGroup(
             user_group_id = usergroup.id,
@@ -77,20 +77,8 @@ def generate_token(user):
         return response_object, 401
         
 """ retreive user group data """
-def get_user_group(data):
-    user = get_a_user(id)
-
-    if not user:
-        response_object = {
-           'status': 'fail',
-           'message':'The user does not exist.' 
-        }
-
-        return response_object, 400
-    else:
-        user_group = UserGroup.query.filter_by(id = user.user_group_id).first() 
-        
-        return user_group, 200
+def get_user_group(user_group_id):
+    return UserGroup.query.filter_by(id = user_group_id).first() 
     
 
 def save_changes(data):
