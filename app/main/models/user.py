@@ -30,6 +30,20 @@ class User(db.Model):
         return "<User '{}'>".format(self.user_name)
 
 
+class DeleteUser(db.Model):
+    """model to store list of deactivated users"""
+    __tablename__ = "deactivated_users"
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    user_account_id = db.Column(db.Integer, nullable=False)
+    in_group_id = db.Column(db.Integer, db.ForeignKey('in_group.id'), nullable=False)
+    first_name = db.Column(db.String(64), nullable=False)
+    last_name = db.Column(db.String(64), nullable=False)
+    user_name = db.Column(db.String(64), unique=True, nullable=False)
+    password = db.Column(db.String(255), nullable=False)
+    email = db.Column(db.String(128), unique=True, nullable=False)
+    deleted_at = db.Column(db.DateTime, nullable=False)
+
 class InGroup(db.Model):
     """In Group model to store a list of all members of a group"""
     __tablename__ = "in_group"
