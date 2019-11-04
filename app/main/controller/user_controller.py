@@ -26,8 +26,8 @@ class UserList(Resource):
     
     @api.response(201, 'User successfully deactivated.')
     @api.doc('deactivate a user')
-    @api.marshal_with(_user)
-    def delete(self, validate=True):
+    @api.expect(_user, validate=True)
+    def delete(self):
         """deactivate a user account given its identifier"""
         data = request.json
         return deactivate_user_account(data=data)
