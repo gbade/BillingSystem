@@ -6,6 +6,7 @@ from ..service.user_service import save_new_user, get_all_users, get_a_user, dea
 
 api = UserDto.api
 dea = DeleteUserDto.api
+
 _user = UserDto.user
 _deactivated = DeleteUserDto.deactivated_users
 
