@@ -1,11 +1,13 @@
 from flask import request
 from flask_restplus import Resource
 
-from ..util.dto import UserDto
+from ..util.dto import UserDto, DeleteUserDto
 from ..service.user_service import save_new_user, get_all_users, get_a_user, deactivate_user_account
 
 api = UserDto.api
+dea = DeleteUserDto.api
 _user = UserDto.user
+_deactivated = DeleteUserDto.deactivated_users
 
 
 @api.route('/')
@@ -23,14 +25,6 @@ class UserList(Resource):
         """Creates a new User """
         data = request.json
         return save_new_user(data=data)
-    
-    @api.response(201, 'User successfully deactivated.')
-    @api.doc('deactivate a user')
-    @api.expect(_user, validate=True)
-    def delete(self):
-        """deactivate a user account given its identifier"""
-        data = request.json
-        return deactivate_user_account(data=data)
 
 
 @api.route('/<public_id>')
@@ -47,4 +41,14 @@ class User(Resource):
         else:
             return user
 
-    
+
+@api.route('/<email>')
+@api.param('email', 'user identifier')
+@api.response(404, 'user not found.')
+class DeleteUser(Resource):
+    @api.response(201, 'User successfully deactivated.')
+    @api.doc('deactivate a user')
+    @api.marshal_with(_deactivated)
+    def delete(self, email):
+        """deactivate a user account given its identifier"""
+        return deactivate_user_account(email)

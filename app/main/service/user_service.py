@@ -52,8 +52,8 @@ def save_new_user(data):
         return response_object, 409
 
 
-def deactivate_user_account(data):
-    user = get_a_user(data['id'])
+def deactivate_user_account(user_email):
+    user = User.query.filter_by(email = user_email).first()
 
     if not user:
         response_object = {

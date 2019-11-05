@@ -13,6 +13,7 @@ class UserDto:
         'confirmation_time': fields.DateTime(description='user confirmation time')
     })
 
+
 class UserGroupDto:
     api = Namespace('user_group', description='user group')
     user_group= api.model('user_group', {
