@@ -33,6 +33,7 @@ class UserList(Resource):
         return deactivate_user_account(data=data)
 
 
+
 @api.route('/<public_id>')
 @api.param('public_id', 'The User identifier')
 @api.response(404, 'User not found.')
