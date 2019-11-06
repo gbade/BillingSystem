@@ -17,32 +17,13 @@ def save_new_user(data):
             insert_ts = datetime.datetime.utcnow()
         )
 
-        user_group = UserGroup(
-            user_group_type_id = data['user_group_type_id'],
-            customer_invoice_data = data['customer_invoice_data'],
-            insert_ts = datetime.datetime.utcnow()
-        )
-
         save_changes(new_user)
-        save_changes(user_group)
-
-        user_id = get_a_user(new_user.id)
-        usergroup = get_user_group(user_group.id)
-
-        in_group = InGroup(
-            user_group_id = usergroup.id,
-            user_account_id = user_id.id,
-            time_added = usergroup.insert_ts,
-            time_removed = None,
-            group_admin = data['group_admin']
-        )
-
-        save_changes(in_group)
 
         response_object = {
             'status': 'success',
             'message': 'Successfully registered.'
         }
+
         return response_object, 201
     else:
         response_object = {
@@ -50,6 +31,70 @@ def save_new_user(data):
             'message': 'User already exists. Please Log in.'
         }
         return response_object, 409
+
+def save_user_group(data):
+    user = User.query.filter_by(email=data['email']).first()
+
+    if not user:
+        response_object = {
+            'status': 'fail',
+            'message': 'User does not exist.'
+        }
+        return response_object, 404
+    else:
+        user_group = UserGroup(
+            user_group_type_id = data['user_group_type_id'],
+            customer_invoice_data = data['customer_invoice_data'],
+            insert_ts = datetime.datetime.utcnow()
+        )
+        save_changes(user_group)
+
+        usergroup = get_user_group(user_group.id)
+
+        in_group = InGroup(
+            user_group_id = usergroup.id,
+            user_account_id = user.id,
+            time_added = usergroup.insert_ts,
+            time_removed = None,
+            group_admin = data['group_admin']
+        )
+        save_changes(in_group)
+        
+        response_object = {
+            'status': 'success',
+            'message': 'Successfully added user group.'
+        }
+        return response_object, 201
+
+
+def update_in_group(data):
+    user = User.query.filter_by(email=data['email']).first()
+    if not user:
+        response_object = {
+            'status': 'fail',
+            'message': 'User does not exist.'
+        }
+        return response_object, 404
+    else:
+        user_group = UserGroup.query.filter_by(user_account_id=user.id).first()
+
+        in_group= InGroup(
+            user_group_id = user_group.id,
+            user_account_id = user.id,
+            time_added = usrgroup.insert_ts,
+            time_removed = data['time_removed'],
+            group_admin = data['group_admin']
+        )
+
+        update_data(in_group)
+
+        response_object = {
+            'status': 'success',
+            'status_code': 00,
+            'message': 'Successfully updated in group.'
+        }
+        return response_object, 201
+
 
 
 def deactivate_user_account(user_email):
@@ -87,6 +132,7 @@ def deactivate_user_account(user_email):
 
         return response_object, 201
 
+
 def get_all_users():
     return User.query.all()
 
@@ -122,4 +168,8 @@ def save_changes(data):
 
 def delete_user(data):
     db.session.delete(data)
+    db.session.commit()
+
+def update_data(data):
+    db.session.update(data)
     db.session.commit()
