@@ -11,9 +11,9 @@ def save_new_user(data):
             last_name = data['last_name'],
             user_name = data['user_name'],
             email=data['email'],
-            password=data['password'],
+            password_hash=data['password'],
             confirmation_code = data['confirmation_code'],
-            confirmation_time= data['confirmation_time'],
+            confirmation_time= None,
             insert_ts = datetime.datetime.utcnow()
         )
 

@@ -8,9 +8,9 @@ class User(db.Model):
     first_name = db.Column(db.String(64), nullable=False)
     last_name = db.Column(db.String(64), nullable=False)
     user_name = db.Column(db.String(64), unique=True, nullable=False)
-    password = db.Column(db.String(255), nullable=False)
+    password_hash = db.Column(db.String(255), nullable=False)
     email = db.Column(db.String(128), unique=True, nullable=False)
-    confimation_code = db.Column(db.Text, nullable=False)
+    confirmation_code = db.Column(db.String(255), nullable=False)
     confirmation_time = db.Column(db.DateTime, nullable=True)
     insert_ts = db.Column(db.DateTime)
     
@@ -21,10 +21,10 @@ class User(db.Model):
 
     @password.setter
     def password(self, password):
-        self.password = flask_bcrypt.generate_password_hash(password).decode('utf-8')
+        self.password_hash = flask_bcrypt.generate_password_hash(password).decode('utf-8')
 
     def check_password(self, password):
-        return flask_bcrypt.check_password_hash(self.password, password)
+        return flask_bcrypt.check_password_hash(self.password_hash, password)
 
     def __repr__(self):
         return "<User '{}'>".format(self.user_name)
