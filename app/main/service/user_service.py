@@ -21,6 +21,7 @@ def save_new_user(data):
 
         response_object = {
             'status': 'success',
+            'status_code': 00,
             'message': 'Successfully registered.'
         }
 
@@ -28,6 +29,7 @@ def save_new_user(data):
     else:
         response_object = {
             'status': 'fail',
+            'status_code': 2,
             'message': 'User already exists. Please Log in.'
         }
         return response_object, 409
@@ -38,6 +40,7 @@ def save_user_group(data):
     if not user:
         response_object = {
             'status': 'fail',
+            'status_code': 4,
             'message': 'User does not exist.'
         }
         return response_object, 404
@@ -62,6 +65,7 @@ def save_user_group(data):
         
         response_object = {
             'status': 'success',
+            'status_code': 00,
             'message': 'Successfully added user group.'
         }
         return response_object, 201
@@ -97,12 +101,13 @@ def update_in_group(data):
 
 
 
-def deactivate_user_account(user_email):
-    user = User.query.filter_by(email = user_email).first()
+def deactivate_user_account(data):
+    user = User.query.filter_by(email = data['email_address']).first()
 
     if not user:
         response_object = {
             'status': 'fail',
+            'status_code': 4,
             'message': 'User does not exist.'
         }
         return response_object, 404
@@ -115,22 +120,15 @@ def deactivate_user_account(user_email):
             first_name = user.first_name,
             last_name = user.last_name,
             user_name = user.user_name,
-            password = user.password,
+            password = user.password_hash,
             email = user.email,
             deleted_at = datetime.datetime.utcnow()
         )
-        
         save_changes(deactivated_user)
 
         delete_user(user)
 
-        response_object = {
-            'status': 'success',
-            'status_code': 00,
-            'message': 'User successfully deactivated.'
-        }
-
-        return response_object, 201
+        return deactivated_user, 201
 
 
 def get_all_users():
