@@ -36,7 +36,7 @@ class DeleteUser(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     user_account_id = db.Column(db.Integer, nullable=False)
-    in_group_id = db.Column(db.Integer, db.ForeignKey('in_group.id'), nullable=False)
+    in_group_id = db.Column(db.Integer, db.ForeignKey('in_group.id'), nullable=True)
     first_name = db.Column(db.String(64), nullable=False)
     last_name = db.Column(db.String(64), nullable=False)
     user_name = db.Column(db.String(64), unique=True, nullable=False)

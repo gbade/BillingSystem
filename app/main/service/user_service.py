@@ -101,8 +101,8 @@ def update_in_group(data):
 
 
 
-def deactivate_user_account(data):
-    user = User.query.filter_by(email = data['email_address']).first()
+def deactivate_user_account(user_email):
+    user = User.query.filter_by(email = user_email).first()
 
     if not user:
         response_object = {
@@ -114,8 +114,13 @@ def deactivate_user_account(data):
     else:
         in_group_data = InGroup.query.filter_by(user_account_id = user.id).first()
 
+        ingroup_id = None
+
+        if in_group_data:
+            ingroup_id = in_group_data.id
+
         deactivated_user = DeleteUser(
-            in_group_id = in_group_data.id,
+            in_group_id = ingroup_id,
             user_account_id = user.id,
             first_name = user.first_name,
             last_name = user.last_name,

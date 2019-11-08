@@ -1,20 +1,17 @@
 from flask import request
 from flask_restplus import Resource
 
-from ..util.dto import UserDto, DeleteUserRequest, SaveUserGroupDto, DeleteUserResponse
+from ..util.dto import UserDto, DeleteUserResponse, SaveUserGroupDto
 from ..service.user_service import save_new_user, get_all_users, get_a_user
 from ..service.user_service import save_user_group, deactivate_user_account
 
 api = UserDto.api
-dea = DeleteUserRequest.api
-de_res = DeleteUserResponse.api
+dea = DeleteUserResponse.api
 usg = SaveUserGroupDto.api
 
 _user = UserDto.user
+_deactivated = DeleteUserResponse.deactivated_users
 _user_group = SaveUserGroupDto.group_model
-_deactivated_mail = DeleteUserRequest.deactivated_users
-_deactivated_user = DeleteUserResponse.user_account
-
 
 
 @api.route('/')
@@ -50,15 +47,16 @@ class User(Resource):
             return user
 
 
-@api.route('/deactivate_account')
+@api.route('/<email>')
+@api.param('email', 'user identifier')
+@api.response(404, 'user not found.')
 class DeleteUser(Resource):
     @api.response(201, 'User successfully deactivated.')
-    @api.doc('deactivate a user account')
-    @api.expect(_deactivated_mail, validate=True)
-    @api.marshal_with(_deactivated_user)
-    def delete(self):
+    @api.doc('deactivate a user')
+    @api.marshal_with(_deactivated)
+    def delete(self, email):
         """deactivate a user account given its identifier"""
-        return deactivate_user_account(data=data)
+        return deactivate_user_account(email)
 
 
 @api.route('/user_group')
