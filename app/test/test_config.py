@@ -22,6 +22,7 @@ class TestDevelopmentConfig(TestCase):
         )
 
 
+
 class TestTestingConfig(TestCase):
     def create_app(self):
         app.config.from_object('app.main.config.TestingConfig')
