@@ -1,14 +1,17 @@
 from flask import request
 from flask_restplus import Resource
 
-from ..util.dto import UserDto, DeleteUserDto
-from ..service.user_service import save_new_user, get_all_users, get_a_user, deactivate_user_account
+from ..util.dto import UserDto, DeleteUserResponse, SaveUserGroupDto
+from ..service.user_service import save_new_user, get_all_users, get_a_user
+from ..service.user_service import save_user_group, deactivate_user_account
 
 api = UserDto.api
-dea = DeleteUserDto.api
+dea = DeleteUserResponse.api
+usg = SaveUserGroupDto.api
 
 _user = UserDto.user
-_deactivated = DeleteUserDto.deactivated_users
+_deactivated = DeleteUserResponse.deactivated_users
+_user_group = SaveUserGroupDto.group_model
 
 
 @api.route('/')
@@ -54,3 +57,14 @@ class DeleteUser(Resource):
     def delete(self, email):
         """deactivate a user account given its identifier"""
         return deactivate_user_account(email)
+
+
+@api.route('/user_group')
+class UserGroup(Resource):
+    @api.response(201, 'User group successfully created.')
+    @api.expect(_user_group, validate=True)
+    @api.doc('create a new user group')
+    def post(self):
+        """Creates a new user group """
+        data = request.json
+        return save_user_group(data=data)

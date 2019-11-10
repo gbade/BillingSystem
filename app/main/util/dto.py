@@ -38,7 +38,7 @@ class AuthDto:
         'password': fields.String(required=True, description='The user password '),
     })
 
-class DeleteUserDto:
+class DeleteUserResponse:
     api = Namespace('deactivated_users', description='List of users deactivated')
     deactivated_users = api.model('deactivated_users', {
         'in_group_id': fields.Integer(required=True, description='in group id'),
@@ -49,4 +49,13 @@ class DeleteUserDto:
         'email': fields.String(required=True, description='user email address'),
         'password': fields.String(required=True, description='user password'),
         'deleted_at': fields.DateTime(required=True, description='time account was deactivated')
+    })
+
+class SaveUserGroupDto:
+    api = Namespace('group_model', description='save created groups with predefined types')
+    group_model = api.model('group_model', {
+        'email': fields.String(required=True, description='user email address'),
+        'user_group_type_id' : fields.Integer(required=True, description='user group type'),
+        'customer_invoice_data': fields.String(description='invoice data'),
+        'group_admin': fields.Boolean(required=True, description='if user account is group admin or not')
     })
