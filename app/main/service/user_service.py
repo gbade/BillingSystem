@@ -34,6 +34,7 @@ def save_new_user(data):
         }
         return response_object, 409
 
+
 def save_user_group(data):
     user = User.query.filter_by(email=data['email']).first()
 
@@ -85,7 +86,7 @@ def update_in_group(data):
         in_group= InGroup(
             user_group_id = user_group.id,
             user_account_id = user.id,
-            time_added = usrgroup.insert_ts,
+            time_added = user_group.insert_ts,
             time_removed = data['time_removed'],
             group_admin = data['group_admin']
         )
